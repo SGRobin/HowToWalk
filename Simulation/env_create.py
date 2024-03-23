@@ -15,8 +15,8 @@ class Simulation:
         # self.id = simulation_id
 
         self.link_ids = [2, 3, 4, 7, 8, 9, 12, 13, 14, 17, 18, 19, 22, 23, 24, 27, 28, 29]
-        self.URDF_file_path = "C:\\Users\\USER\\PycharmProjects\\AIing\\Simulation\\models\\crab_model.urdf.xml"
-        self.startPos = [0, 0, 0.18]
+        self.URDF_file_path = "models\\humanoid.urdf.xml"
+        self.startPos = [0, 0, 1.2]
         self.startOrientation = self.physics_client.getQuaternionFromEuler([0, 0, 0])
 
         self.robot_id = self.physics_client.loadURDF(self.URDF_file_path, self.startPos, self.startOrientation)
@@ -30,7 +30,7 @@ class Simulation:
 
         if gui:
             focus_position, _ = self.physics_client.getBasePositionAndOrientation(self.robot_id)
-            self.physics_client.resetDebugVisualizerCamera(cameraDistance=1, cameraYaw=135, cameraPitch=-40,
+            self.physics_client.resetDebugVisualizerCamera(cameraDistance=2, cameraYaw=135, cameraPitch=-40,
                                                            cameraTargetPosition=focus_position)
 
         self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -112,27 +112,27 @@ class Simulation:
             for i in range(time_to_run):
                 hard.step(self.robot_id, i)
                 self.physics_client.stepSimulation()
-                if i % 45 == 0:
-                    # make him step on his toes:
-                    collision_points = self.physics_client.getContactPoints(self.robot_id, self.plane_id)
-                    collision_points = [point[5][1] for point in collision_points]
-                    for point in collision_points:
-                        if abs(point) > 0.2:
-                            reward -= 0.01
-
-                    print("reward: " + str(reward))
-                    robot_position, robot_orientation = self.physics_client.getBasePositionAndOrientation(self.robot_id)
-                    # give the reward
-
-                    reward += -robot_position[0] - distance
-                    if robot_position[2] <= 0.07:
-                        reward -= 0.01
-
-                    distance = -robot_position[0]
-                    if abs(robot_orientation[3]) < 0.98:
-                        self.physics_client.resetBasePositionAndOrientation(self.robot_id, self.startPos,
-                                                                            self.startOrientation)
-                        return distance - 1
+                # if i % 45 == 0:
+                #     # make him step on his toes:
+                #     collision_points = self.physics_client.getContactPoints(self.robot_id, self.plane_id)
+                #     collision_points = [point[5][1] for point in collision_points]
+                #     for point in collision_points:
+                #         if abs(point) > 0.2:
+                #             reward -= 0.01
+                #
+                #     print("reward: " + str(reward))
+                #     robot_position, robot_orientation = self.physics_client.getBasePositionAndOrientation(self.robot_id)
+                #     # give the reward
+                #
+                #     reward += -robot_position[0] - distance
+                #     if robot_position[2] <= 0.07:
+                #         reward -= 0.01
+                #
+                #     distance = -robot_position[0]
+                #     if abs(robot_orientation[3]) < 0.98:
+                #         self.physics_client.resetBasePositionAndOrientation(self.robot_id, self.startPos,
+                #                                                             self.startOrientation)
+                #         return distance - 1
                 if wait is True:
                     time.sleep(0.004)
         # print(f"simulation_execution_time: {simulation_execution_time} seconds\n")

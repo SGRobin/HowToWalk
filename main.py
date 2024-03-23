@@ -10,8 +10,8 @@ from worms import worm_agent
 
 # Genetic Algorithm parameters
 # AGENT = worm_agent
-AGENT = robot_agent
-# AGENT = xor_agent
+# AGENT = robot_agent
+AGENT = xor_agent
 
 if AGENT == xor_agent:
     network_size = [2, 1, 1, 1]

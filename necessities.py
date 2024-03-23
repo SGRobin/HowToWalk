@@ -229,6 +229,7 @@ def train(agent, network_size, num_of_inputs):
         population = sorted(population, key=lambda obj: fitness_scores[population.index(obj)], reverse=True)
 
         for i in range(int(POPULATION_SIZE / NUM_OF_POPULATIONS)):
+            population[i].generations_stuck = 0
             best_networks.append(population[i])
 
         save(population[0], f"save_network_{population_num}.pkl")
